@@ -152,7 +152,7 @@ def main():
 	movecount = 0;
 	print_board();
 	while True:
-
+		movecount += 1;
 		if player_turn:
 			print("player 2 's turn")
 		else:

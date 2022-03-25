@@ -1,3 +1,9 @@
+# This is gui game called memory game
+#
+# made by: Zeyad Shahin (20210150)
+# date: 25/2/2021
+
+
 import pygame
 import random
 from cell import Cell
@@ -83,9 +89,9 @@ def update_screen():
 		elif player1 > player2:
 			text = font.render("player A Won", False, (0, 255, 0))
 		else:
-			text = font.render("Its a tie", False, (0, 255, 255))
+			text = font.render("Its a draw", False, (0, 255, 255))
 
-		display.blit(text, CENTER)	
+		display.blit(text, CENTER)
 
 	#update the display
 	pygame.display.update()
