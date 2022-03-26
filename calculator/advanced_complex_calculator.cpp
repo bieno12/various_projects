@@ -5,16 +5,19 @@
 #include <string>
 #include <sstream>
 #include <vector>
+#include <exception>
 using namespace std;
 
 using ll = long long;
 using ld = long  double;
-
 struct complex 
 {
 	double a;
 	double b;
-
+	static complex zero()
+	{
+		return {0,0};
+	}
 	//overriding how cout prints the complex number;
 	friend ostream & operator<<(std::ostream & Str, complex const & v) { 
   		// print something from v to str, e.g: Str << v.getX();
@@ -31,7 +34,7 @@ struct complex
   		else
   		{
   			Str << v.a << ' ' << ((v.b > 0)? "+ " : "- ");
-  			if(v.b != 1)
+  			if(abs(v.b) != 1)
   				Str << v.b;
   			Str << 'i';
   		}
@@ -74,8 +77,13 @@ struct complex
 		res.b /= (Z.a * Z.a + Z.b * Z.b); 
 		return res;
 	}
+	bool operator==(const complex z)
+	{
+		return (z.a == a) && (z.b == b);
+	}
 
 };
+
 enum token_type
 {
 	NUMBER,
@@ -218,6 +226,14 @@ public:
 		delete this;
 	}
 };
+
+class divide_by_zero_exception : public exception {
+	virtual const char * what() const noexcept override {
+
+		return "Cannot divide by zero";
+	}
+};
+
 //divide operation node
 class divide_node : public node
 {
@@ -231,7 +247,12 @@ public:
 	}
 	complex execute()
 	{
-		return first_operand->execute() / second_operand->execute();
+		complex second = second_operand->execute();
+		if(second == complex::zero())
+			throw divide_by_zero_exception()	;
+			
+		return first_operand->execute() / second;
+
 	}
 	string to_str()
 	{
@@ -478,7 +499,9 @@ int main()
 		vector<Token> tks;
 		Lexer lexer(expression);
 		try
+		{
 			tks = lexer.generate_tokens();
+		}
 		catch (string message)
 		{
 			cout << message << endl;
@@ -488,13 +511,25 @@ int main()
 		Parser parser(tks);
 		node* parsed_expr;
 		try
+		{	
 			parsed_expr = parser.parse();
+		}
 		catch(string e)
 		{
 			cout << e << endl;
 			continue;
 		}
-		cout << parsed_expr->execute() << endl;
+		complex result;
+		try
+		{
+			result = parsed_expr->execute();
+		}
+		catch (exception& e) {
+			cout << e.what() << '\n';
+			continue;
+		}
+		
+		cout << result << endl;
 		parsed_expr->destroy();
 	}
 }
