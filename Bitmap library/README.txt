@@ -1,0 +1,1 @@
+This project is an attempt to open bitmap files with variable dimensions. The original bitmap library used in our assignment in Structured programming course.
