@@ -1,0 +1,6 @@
+#define CSI_CLEARSCREEN "\x1b[2J"
+#define CSI_SET_CURSOR(x, y) "\x1b[" << y << ";" << x << "H"
+#define CSI_HIDE_CURSOR "\x1b[?25l"
+#define CSI_SHOW_CURSOR "\x1b[?25h"
+#define CSI_SET_BG(r,g,b) "\x1B[" << "48;2;" << r << ";" << g << ";" << b << "m"
+#define CSI_RESET_FORMAT  "\x1b[0m"
